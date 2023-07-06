@@ -23,7 +23,7 @@ class Diffusion:
 
         self.objective = objective
 
-        self.beta = self.prepare_noise_schedule(schedule).to(device)
+        self.beta = self.prepare_noise_schedule(schedule, beta_start, beta_end).to(device)
 
         """
         Step 1. 
@@ -34,9 +34,9 @@ class Diffusion:
         """
 
 
-    def prepare_noise_schedule(self, schedule):
+    def prepare_noise_schedule(self, schedule, beta_start, beta_end):
         if schedule == 'linear':
-            return linear_beta_schedule(self.noise_steps)
+            return linear_beta_schedule(self.noise_steps, beta_start, beta_end)
         else:
             return cosine_beta_schedule(self.noise_steps)
 
