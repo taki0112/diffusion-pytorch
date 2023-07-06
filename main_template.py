@@ -12,9 +12,6 @@ import torch.nn.functional as F
 
 logging.basicConfig(format="%(asctime)s - %(levelname)s: %(message)s", level=logging.INFO, datefmt="%I:%M:%S")
 
-# ssh nsml@10.169.39.114 -p 10457 -o StrictHostKeyChecking=no
-# ssh_v100_upload.sh "*" "ssh nsml@10.169.39.114 -p 10457 -o StrictHostKeyChecking=no" "diffusion_test"
-# ssh_v100_download.sh "ssh nsml@10.169.39.114 -p 10457 -o StrictHostKeyChecking=no" "diffusion_test/results" "./"
 
 class Diffusion:
     def __init__(self, noise_steps=1000, beta_start=1e-4, beta_end=0.02, img_size=256, objective='ddpm', schedule='linear', device="cuda"):
@@ -27,8 +24,15 @@ class Diffusion:
         self.objective = objective
 
         self.beta = self.prepare_noise_schedule(schedule).to(device)
-        self.alpha = 1. - self.beta
-        self.alpha_hat = torch.cumprod(self.alpha, dim=0)
+
+        """
+        Step 1. 
+        
+        self.alpha = ?
+        self.alpha_hat = ?
+        
+        """
+
 
     def prepare_noise_schedule(self, schedule):
         if schedule == 'linear':
@@ -36,54 +40,57 @@ class Diffusion:
         else:
             return cosine_beta_schedule(self.noise_steps)
 
+    def sample_timesteps(self, n):
+        """
+        Step 2.
+        n개의 랜덤한 timestep을 샘플링 하세요. range = [1, self.noise_steps]
+
+        :param n: int
+        :return: [n, ] shape을 갖고있을것입니다.
+
+        주의사항: timestep이니까, 값은 int형이어야 합니다.
+
+        """
+        return
 
     def noise_images(self, x, t):
-        sqrt_alpha_hat = torch.sqrt(self.alpha_hat[t])[:, None, None, None]
-        sqrt_one_minus_alpha_hat = torch.sqrt(1 - self.alpha_hat[t])[:, None, None, None]
-        z = torch.randn_like(x)
-        return sqrt_alpha_hat * x + sqrt_one_minus_alpha_hat * z, z
+        """
+        Step 3.
+        forward process를 작성하세요.
+        -> 이미지에 noise를 입히는 과정입니다.
 
-    def sample_timesteps(self, n):
-        return torch.randint(low=1, high=self.noise_steps, size=(n,))
+        return은 노이즈를 입힌 이미지와, 입혔던 노이즈를 리턴하세요 !! 총 2개입니다.
 
-    def tensor_to_image(self, x):
-        x = (x.clamp(-1, 1) + 1) / 2
-        x = (x * 255).type(torch.uint8)
-        return x
+        :param x: [n, 3, img_size, img_size]
+        :param t: [n, ]
+        :return: [n, 3, img_size, img_size], [n, 3, img_size, img_size]
+
+        """
+        return
+
 
     def sample(self, model, n):
-        # reverse process
+        """
+        Step 5. 마지막!
+        reverse process를 완성하세요.
+
+        :param model: Unet
+        :param n: batch_size
+        :return: x: [n, 3, img_size, img_size]
+        """
         logging.info(f"Sampling {n} new images....")
         model.eval()
         with torch.no_grad():
-            x = torch.randn((n, 3, self.img_size, self.img_size)).to(self.device)
-            for i in tqdm(reversed(range(1, self.noise_steps))):
-                t = (torch.ones(n) * i).long().to(self.device)
-                predicted_noise = model(x, t)
-
-                alpha = self.alpha[t][:, None, None, None]
-                beta = self.beta[t][:, None, None, None]
-                alpha_hat = self.alpha_hat[t][:, None, None, None]
-                alpha_hat_prev = self.alpha_hat[t-1][:, None, None, None]
-                beta_tilde = beta * (1 - alpha_hat_prev) / (1 - alpha_hat) # similar to beta
-
-                if i > 1:
-                    noise = torch.randn_like(x)
-                else:
-                    noise = torch.zeros_like(x)
-
-                if self.objective == 'ddpm':
-                    predict_x0 = 0
-                    direction_point = 1 / torch.sqrt(alpha) * (x - (beta / (torch.sqrt(1 - alpha_hat))) * predicted_noise)
-                    random_noise = torch.sqrt(beta_tilde) * noise
-
-                    x = predict_x0 + direction_point + random_noise
-                else:
-                    predict_x0 = alpha_hat_prev * (x - torch.sqrt(1 - alpha_hat) * predicted_noise) / torch.sqrt(alpha_hat)
-                    direction_point = torch.sqrt(1 - alpha_hat_prev) * predicted_noise
-                    random_noise = 0
-
-                    x = predict_x0 + direction_point + random_noise
+            """
+            (1) T스텝에서 부터 denoise하는것이기때문에, 가우시안 noise를 하나 만드세요.
+            (2) T (self.noise_steps)부터 denoise하는 구문을 만드세요. 
+                hint: T, T-1, T-2, ... , 3, 2, 1 이런식으로 t가 나와야겠죠 ?
+            (3) t에 해당하는 alpha_t, beta_t, alpha_hat_t, alpha_hat_(t-1), beta_tilde를 만드세요.
+            
+            (4) (1)의 noise와 (2)의 t를 모델에 넣어서, noise를 predict하세요.
+            (5) predict한 noise를 가지고, ddpm과 ddim sampling를 작성하세요.
+            
+            """
 
         model.train()
         return torch.clamp(x, -1.0, 1.0)
@@ -95,7 +102,6 @@ def train(args):
     dataloader = get_data(args)
     model = UNet(device=device).to(device)
     optimizer = optim.AdamW(model.parameters(), lr=args.lr)
-    mse = nn.MSELoss()
     diffusion = Diffusion(img_size=args.image_size, device=device)
     logger = SummaryWriter(os.path.join("logs", args.run_name))
     l = len(dataloader)
@@ -105,17 +111,24 @@ def train(args):
         pbar = tqdm(dataloader)
         for i, images in enumerate(pbar):
             images = images.to(device)
-            t = diffusion.sample_timesteps(images.shape[0]).to(device)
-            x_t, noise = diffusion.noise_images(images, t)
-            predicted_noise = model(x_t, t)
-            loss = mse(noise, predicted_noise)
+            """
+            Step 4.
+            학습코드를 작성해보세요.
+            다음 hint를 참고하여 작성하면됩니다.
+            
+            hint:
+            (1) timestep을 샘플링 하세요.
+            (2) 해당 timestep t에 대응되는 노이즈 입힌 이미지를 만드세요.
+            (3) 모델에 넣어서, 노이즈를 predict 하세요.
+            (4) 적절한 loss를 선택하세요. (L1 or L2)
+            """
 
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()
 
             pbar.set_postfix(MSE=loss.item())
-            logger.add_scalar("MSE", loss.item(), global_step=epoch * l + i)
+            logger.add_scalar("diffusion loss", loss.item(), global_step=epoch * l + i)
 
         sampled_images = diffusion.sample(model, n=images.shape[0])
         save_images(sampled_images, os.path.join("results", args.run_name, f"{epoch}.png"))

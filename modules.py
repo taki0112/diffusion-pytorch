@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-
+import math
 
 def linear_beta_schedule(timesteps):
     scale = 1000 / timesteps
