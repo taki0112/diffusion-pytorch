@@ -23,16 +23,16 @@ class Diffusion:
 
         self.objective = objective
 
-        self.beta = self.prepare_noise_schedule(schedule).to(device)
+        self.beta = self.prepare_noise_schedule(schedule, beta_start, beta_end).to(device)
+
         self.alpha = 1. - self.beta
         self.alpha_hat = torch.cumprod(self.alpha, dim=0)
 
-    def prepare_noise_schedule(self, schedule):
+    def prepare_noise_schedule(self, schedule, beta_start, beta_end):
         if schedule == 'linear':
-            return linear_beta_schedule(self.noise_steps)
+            return linear_beta_schedule(self.noise_steps, beta_start, beta_end)
         else:
             return cosine_beta_schedule(self.noise_steps)
-
 
     def noise_images(self, x, t):
         sqrt_alpha_hat = torch.sqrt(self.alpha_hat[t])[:, None, None, None]
