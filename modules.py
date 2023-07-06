@@ -3,10 +3,10 @@ import torch.nn as nn
 import torch.nn.functional as F
 import math
 
-def linear_beta_schedule(timesteps):
+def linear_beta_schedule(timesteps, beta_start, beta_end):
     scale = 1000 / timesteps
-    beta_start = scale * 0.0001
-    beta_end = scale * 0.02
+    beta_start = scale * beta_start
+    beta_end = scale * beta_end
 
     return torch.linspace(beta_start, beta_end, timesteps)
 
