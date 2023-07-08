@@ -42,6 +42,6 @@
 ---
 ### Recommended code
 * [pytorch & tensorflow code template](https://github.com/taki0112/tf-torch-template)
-* [Stylegan2-pytorch[(https://github.com/taki0112/stylegan2-pytorch)
+* [Stylegan2-pytorch](https://github.com/taki0112/stylegan2-pytorch)
 * [GALIP-pytorch](https://github.com/taki0112/diffusion-pytorch/tree/main/src/GALIP)
 * [DDGAN-tensorflow](https://github.com/taki0112/denoising-diffusion-gan-Tensorflow)
