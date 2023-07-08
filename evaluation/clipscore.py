@@ -69,7 +69,7 @@ batch_encoding = tokenizer(text, truncation=True, max_length=77, padding="max_le
 # input_ids는 주어진 텍스트를 토크나이즈한것이고, mask는 어디까지만이 유효한 token인지 알려줍니다. 1=유효, 0=의미없음
 
 text_token = batch_encoding["input_ids"]
-t = clip_text_encoder(text_token) # 이것은 clip_model.text_model(text_token)과 같다.
+t_embed = clip_text_encoder(text_token) # 이것은 clip_model.text_model(text_token)과 같다.
 # [last_hidden_state, pooler_output] -> [bs, 77, 768], [bs, 768]
 # last_hidden_state = word embedding
 # pooler_output = sentence embedding
@@ -82,7 +82,8 @@ text_feature = clip_model.get_text_features(text_token)
 Step 3. Image
 """
 image = clip_image_process(image)
-feat = clip_image_encoder(image) # 이것은 clip_model.vision_model(image)과 같다.
+
+i_embed = clip_image_encoder(image) # 이것은 clip_model.vision_model(image)과 같다.
 # [last_hidden_state, pooler_output] -> [bs, 256, 1024], [bs, 1024]
 
 image_feature = clip_model.get_image_features(image)
