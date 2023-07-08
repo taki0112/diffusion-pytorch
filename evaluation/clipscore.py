@@ -3,7 +3,7 @@ from transformers import CLIPTokenizer, CLIPTextModel, CLIPVisionModel, CLIPMode
 import torch
 from torchvision import transforms
 import torch.nn.functional as F
-
+import torch.nn as nn
 
 def clip_image_process(x):
     def denormalize(x):
@@ -33,6 +33,23 @@ def clip_image_process(x):
     x = norm_mean_std(x)
 
     return x
+
+def contrastive_loss(logits, dim) :
+    neg_ce = torch.diag(nn.functional.log_softmax(logits, dim=dim))
+    return -neg_ce.mean()
+
+def clip_contra_loss(img_features, txt_features, logit_scale):
+    img_features = img_features / img_features.norm(p=2, dim=-1, keepdim=True)
+    txt_features = txt_features / txt_features.norm(p=2, dim=-1, keepdim=True)
+
+    # cosine similarity as logits
+    logit_scale = logit_scale.exp()
+    similarity = torch.matmul(txt_features, img_features.t()) * logit_scale
+
+    caption_loss = contrastive_loss(similarity, dim=0)
+    image_loss = contrastive_loss(similarity, dim=1)
+
+    return (caption_loss + image_loss) / 2.0 # minimize
 
 def clip_score(img_features, txt_features):
     img_features = img_features / img_features.norm(p=2, dim=-1, keepdim=True)
@@ -90,4 +107,5 @@ image_feature = clip_model.get_image_features(image)
 # pooler_output에 Linear을 태운것
 
 print(clip_score(image_feature, text_feature))
+print(clip_contra_loss(image_feature, text_feature, clip_model.logit_scale))
 
