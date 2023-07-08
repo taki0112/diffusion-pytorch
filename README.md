@@ -1,5 +1,5 @@
 # diffusion-pytorch
-### 이화여대 강의자료
+### 이화여대 강의자료입니다. 사용시 reference 부탁드립니다. :)
 
 <div align="center">
   <img src=./assets/figs/teaser.png>
