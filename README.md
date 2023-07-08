@@ -21,7 +21,7 @@
 * Editing
 
 <div align="center">
-  <img src=./assets/figs/advaned_fig.png>
+  <img src=./assets/figs/advanced_fig.png>
 </div>
 
 ---
