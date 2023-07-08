@@ -1,8 +1,7 @@
 # diffusion-pytorch
 
 ## Basic diffusion
-* DDPM
-* DDIM
+* DDPM, DDIM
 * Classifier guidance
 * Diffusion + GAN
 
