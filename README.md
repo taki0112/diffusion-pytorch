@@ -5,6 +5,11 @@
   <img src=./assets/figs/teaser.png>
 </div>
 
+## Author
+[Junho Kim](http://bit.ly/jhkim_resume)
+
+---
+
 ## Basic diffusion (Theory)
 * DDPM, DDIM
 * Classifier guidance
@@ -33,7 +38,3 @@
 <div align="center">
   <img src=./assets/figs/handson_fig.png>
 </div>
-
----
-## Author
-[Junho Kim](http://bit.ly/jhkim_resume)
