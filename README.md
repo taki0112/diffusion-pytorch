@@ -13,7 +13,7 @@
 ## Basic diffusion (Theory)
 * DDPM, DDIM
 * Classifier guidance
-* Diffusion + GAN
+* Diffusion + GAN (DDGAN)
   
 <div align="center">
   <img src=./assets/figs/basic_fig.png>
