@@ -127,7 +127,7 @@ def train(args):
             loss.backward()
             optimizer.step()
 
-            pbar.set_postfix(MSE=loss.item())
+            pbar.set_postfix(Loss=loss.item())
             logger.add_scalar("diffusion loss", loss.item(), global_step=epoch * l + i)
 
         sampled_images = diffusion.sample(model, n=images.shape[0])
