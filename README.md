@@ -2,7 +2,7 @@
 ### 이화여대 강의자료입니다. 사용시 reference 부탁드립니다. :)
 ### Teaching materials from Ewha Womans University. Please cite the link when used. :)
 
-### 강의록은 강의날 업로드 예정입니다.
+### 강의록은 강의날(2023.07.13) 업로드 예정입니다.
 
 <div align="center">
   <img src=./assets/figs/teaser.png>
