@@ -144,7 +144,7 @@ def launch():
     args.image_size = 64
     args.objective = 'ddpm'
     args.schedule = 'linear'
-    args.dataset_path = "./dataset/cat"
+    args.dataset_path = "../dataset/cat"
     args.device = "cpu"
     args.lr = 3e-4
 

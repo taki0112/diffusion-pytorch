@@ -8,7 +8,7 @@ parser = argparse.ArgumentParser()
 args = parser.parse_args()
 args.batch_size = 1  # 5
 args.image_size = 64
-args.dataset_path = 'dataset/cat'
+args.dataset_path = '../dataset/cat'
 
 dataloader = get_data(args)
 
