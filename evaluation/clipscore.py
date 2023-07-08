@@ -42,7 +42,7 @@ def clip_score(img_features, txt_features):
     # score = torch.mean(score)
 
     # 위와 같다.
-    score = F.cosine_similarity(img_features, txt_features)
+    score = F.cosine_similarity(img_features, txt_features).mean()
     return score
 
 # library
