@@ -1,18 +1,18 @@
 # diffusion-pytorch
 
-## Basic diffusion
+## Basic diffusion (Theory)
 * DDPM, DDIM
 * Classifier guidance
 * Diffusion + GAN
 
 ---
-## Advanced diffusion
+## Advanced diffusion (Theory)
 * Stable diffusion, GALIP
 * Evaluation
 * Editing
 
 ---
-## Hands-on diffusion (implementation)
+## Hands-on diffusion (Implementation)
 * DDPM, DDIM
 * How to use the SD ?
 * How to evaluate ?
