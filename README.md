@@ -23,6 +23,8 @@
   <img src=./assets/figs/gan_fig.png>
 </div>
 
+---
+
 ## Basic diffusion (Theory)
 * DDPM, DDIM
 * Classifier guidance
