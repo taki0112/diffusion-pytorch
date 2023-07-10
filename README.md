@@ -9,6 +9,11 @@
   <img src=./assets/figs/teaser.png>
 </div>
 
+## Youtube
+* [The recipe of GANs](https://www.youtube.com/watch?v=vZdEGcLU_8U)
+* [The basic diffusion](https://www.youtube.com/watch?v=jaPPALsUZo8)
+* [The advanced diffusion](https://www.youtube.com/watch?v=Z8WWriIh1PU)
+
 ## Author
 [Junho Kim](http://bit.ly/jhkim_resume)
 
