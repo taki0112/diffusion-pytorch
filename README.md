@@ -18,6 +18,10 @@
 [Junho Kim](http://bit.ly/jhkim_resume)
 
 ---
+## Summary of GANs
+<div align="center">
+  <img src=./assets/figs/gan_fig.png>
+</div>
 
 ## Basic diffusion (Theory)
 * DDPM, DDIM
