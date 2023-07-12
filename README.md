@@ -1,5 +1,5 @@
 # diffusion-pytorch
-#### 이화여대 강의자료입니다. 사용시 citation 부탁드립니다. :)
+#### 이화여대 강의자료입니다. 사용시 citation 부탁드립니다. :)
 #### 강의자료는 강의날(2023.07.13) 업로드 예정입니다.
 
 #### Teaching materials from Ewha Womans University. Please cite the link when used. :)
