@@ -74,7 +74,7 @@ class Diffusion:
 
                     x = predict_x0 + direction_point + random_noise
                 else:
-                    predict_x0 = alpha_hat_prev * (x - torch.sqrt(1 - alpha_hat) * predicted_noise) / torch.sqrt(alpha_hat)
+                    predict_x0 = torch.sqrt(alpha_hat_prev) * (x - torch.sqrt(1 - alpha_hat) * predicted_noise) / torch.sqrt(alpha_hat)
                     direction_point = torch.sqrt(1 - alpha_hat_prev) * predicted_noise
                     random_noise = 0
 
